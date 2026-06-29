@@ -1,10 +1,17 @@
-from estruturas import ArvoreBusca, FilaAtendimento, HashOcorrencias, MaxHeapPrioridade, PilhaHistorico
+from estruturas import (
+    ArvoreBusca,
+    FilaAtendimento,
+    HashOcorrencias,
+    ListaEncadeada,
+    MaxHeapPrioridade,
+    PilhaHistorico,
+)
 from modelos import Ocorrencia
 
 
 class SistemaOcorrencias:
     def __init__(self):
-        self.lista_geral = []
+        self.lista_geral = ListaEncadeada()
         self.fila = FilaAtendimento()
         self.arvore = ArvoreBusca()
         self.heap = MaxHeapPrioridade()
@@ -28,7 +35,7 @@ class SistemaOcorrencias:
         )
         self._proxima_ordem += 1
 
-        self.lista_geral.append(ocorrencia)
+        self.lista_geral.inserir_fim(ocorrencia)
         self.fila.enfileirar(ocorrencia)
         self.arvore.inserir(ocorrencia.id, ocorrencia)
         self.heap.inserir(ocorrencia)
@@ -38,7 +45,7 @@ class SistemaOcorrencias:
         return ocorrencia
 
     def listar_todas(self):
-        return list(self.lista_geral)
+        return self.lista_geral
 
     def atender_por_chegada(self):
         ocorrencia = self.fila.desenfileirar_aberta()
@@ -64,16 +71,22 @@ class SistemaOcorrencias:
 
     def ordenar_ocorrencias(self, campo):
         self._validar_campo_ordenacao(campo)
-        copia = list(self.lista_geral)
-        if not copia:
-            return []
+        copia = self.lista_geral.copiar()
+        if copia.esta_vazia():
+            return copia
 
-        tamanho = len(copia)
+        houve_troca = True
 
-        for i in range(tamanho):
-            for j in range(0, tamanho - i - 1):
-                if self._maior_que(copia[j], copia[j + 1], campo):
-                    copia[j], copia[j + 1] = copia[j + 1], copia[j]
+        while houve_troca:
+            houve_troca = False
+            atual = copia.inicio
+            while atual is not None and atual.proximo is not None:
+                if self._maior_que(atual.valor, atual.proximo.valor, campo):
+                    temporario = atual.valor
+                    atual.valor = atual.proximo.valor
+                    atual.proximo.valor = temporario
+                    houve_troca = True
+                atual = atual.proximo
 
         return copia
 
@@ -85,8 +98,8 @@ class SistemaOcorrencias:
         if registro is None:
             return None
 
-        tipo = registro["tipo"]
-        ocorrencia = registro["ocorrencia"]
+        tipo = registro.tipo
+        ocorrencia = registro.ocorrencia
 
         if tipo == "atendimento":
             ocorrencia.status = "Aberto"
@@ -94,7 +107,7 @@ class SistemaOcorrencias:
             return f"Atendimento desfeito. Ocorrência ID {ocorrencia.id} voltou para Aberto."
 
         if tipo == "cadastro":
-            self.lista_geral = [item for item in self.lista_geral if item.id != ocorrencia.id]
+            self.lista_geral.remover_por_id(ocorrencia.id)
             if ocorrencia.id == self._proximo_id - 1:
                 self._proximo_id -= 1
             if ocorrencia.ordem_chegada == self._proxima_ordem - 1:
@@ -102,7 +115,7 @@ class SistemaOcorrencias:
             self._reconstruir_estruturas()
             return f"Cadastro desfeito. Ocorrência ID {ocorrencia.id} removida."
 
-        return f"Registro removido do histórico: {registro['descricao']}"
+        return f"Registro removido do histórico: {registro.descricao}"
 
     def _maior_que(self, a, b, campo):
         if campo == "id":
@@ -113,7 +126,7 @@ class SistemaOcorrencias:
             return a.nome.lower() > b.nome.lower()
 
     def _validar_campo_ordenacao(self, campo):
-        if campo not in ("id", "prioridade", "nome"):
+        if campo != "id" and campo != "prioridade" and campo != "nome":
             raise ValueError("Campo de ordenação inválido.")
 
     def _validar_prioridade(self, prioridade):

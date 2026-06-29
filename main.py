@@ -8,16 +8,6 @@ if hasattr(sys.stdout, "reconfigure"):
 if hasattr(sys.stderr, "reconfigure"):
     sys.stderr.reconfigure(encoding="utf-8")
 
-TIPOS_OCORRENCIA = {
-    "1": "Laboratório",
-    "2": "Documento",
-    "3": "Suporte técnico",
-    "4": "Reserva de sala",
-    "5": "Equipamento",
-    "6": "Outro",
-}
-
-
 def formatar_ocorrencia(ocorrencia):
     return (
         f"ID: {ocorrencia.id} | Nome: {ocorrencia.nome} | Tipo: {ocorrencia.tipo} | "
@@ -64,18 +54,28 @@ def ler_texto_obrigatorio(mensagem):
 
 def escolher_tipo_ocorrencia():
     print("Tipo da ocorrência:")
-    for numero, tipo in TIPOS_OCORRENCIA.items():
-        print(f"{numero} - {tipo}")
+    print("1 - Laboratório")
+    print("2 - Documento")
+    print("3 - Suporte técnico")
+    print("4 - Reserva de sala")
+    print("5 - Equipamento")
+    print("6 - Outro")
 
     while True:
         escolha = input("Escolha o tipo: ").strip()
-        tipo = TIPOS_OCORRENCIA.get(escolha)
-        if tipo is None:
-            print("Opção inválida.")
-        elif tipo == "Outro":
+        if escolha == "1":
+            return "Laboratório"
+        if escolha == "2":
+            return "Documento"
+        if escolha == "3":
+            return "Suporte técnico"
+        if escolha == "4":
+            return "Reserva de sala"
+        if escolha == "5":
+            return "Equipamento"
+        if escolha == "6":
             return ler_texto_obrigatorio("Informe o tipo da ocorrência: ")
-        else:
-            return tipo
+        print("Opção inválida.")
 
 
 def cadastrar_pelo_menu(sistema):
@@ -150,9 +150,13 @@ def ordenar_pelo_menu(sistema):
     print("2 - Prioridade decrescente")
     print("3 - Nome crescente")
     escolha = input("Escolha o criterio: ").strip()
-    campos = {"1": "id", "2": "prioridade", "3": "nome"}
-    campo = campos.get(escolha)
-    if campo is None:
+    if escolha == "1":
+        campo = "id"
+    elif escolha == "2":
+        campo = "prioridade"
+    elif escolha == "3":
+        campo = "nome"
+    else:
         print("Opção inválida.")
         return
 
@@ -209,17 +213,6 @@ def exibir_menu():
 
 def executar_menu():
     sistema = SistemaOcorrencias()
-    acoes = {
-        "1": cadastrar_pelo_menu,
-        "2": listar_todas_pelo_menu,
-        "3": atender_fila_pelo_menu,
-        "4": atender_prioridade_pelo_menu,
-        "5": buscar_id_pelo_menu,
-        "6": buscar_hash_pelo_menu,
-        "7": ordenar_pelo_menu,
-        "8": historico_pelo_menu,
-        "9": desfazer_pelo_menu,
-    }
 
     while True:
         limpar_tela()
@@ -229,11 +222,26 @@ def executar_menu():
             print("Encerrando o sistema.")
             break
 
-        acao = acoes.get(escolha)
-        if acao is None:
-            print("Opção inválida.")
+        if escolha == "1":
+            cadastrar_pelo_menu(sistema)
+        elif escolha == "2":
+            listar_todas_pelo_menu(sistema)
+        elif escolha == "3":
+            atender_fila_pelo_menu(sistema)
+        elif escolha == "4":
+            atender_prioridade_pelo_menu(sistema)
+        elif escolha == "5":
+            buscar_id_pelo_menu(sistema)
+        elif escolha == "6":
+            buscar_hash_pelo_menu(sistema)
+        elif escolha == "7":
+            ordenar_pelo_menu(sistema)
+        elif escolha == "8":
+            historico_pelo_menu(sistema)
+        elif escolha == "9":
+            desfazer_pelo_menu(sistema)
         else:
-            acao(sistema)
+            print("Opção inválida.")
         pausar()
 
 
