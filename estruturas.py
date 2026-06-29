@@ -80,10 +80,12 @@ class ListaEncadeada:
 
 
 class RegistroHistorico:
-    def __init__(self, descricao, tipo, ocorrencia=None):
+    def __init__(self, descricao, tipo, ocorrencia=None, numero=0, numero_desfeito=None):
         self.descricao = descricao
         self.tipo = tipo
         self.ocorrencia = ocorrencia
+        self.numero = numero
+        self.numero_desfeito = numero_desfeito
 
 
 class NoPilha:
@@ -95,11 +97,13 @@ class NoPilha:
 class PilhaHistorico:
     def __init__(self):
         self.topo = None
+        self.proximo_numero = 1
 
     def registrar(self, descricao, tipo, ocorrencia=None):
-        novo = NoPilha(RegistroHistorico(descricao, tipo, ocorrencia))
+        novo = NoPilha(RegistroHistorico(descricao, tipo, ocorrencia, self.proximo_numero))
         novo.proximo = self.topo
         self.topo = novo
+        self.proximo_numero += 1
 
     def listar(self):
         descricoes = ListaEncadeada()
@@ -109,12 +113,42 @@ class PilhaHistorico:
             atual = atual.proximo
         return descricoes
 
-    def desfazer(self):
-        if self.topo is None:
-            return None
-        registro = self.topo.registro
-        self.topo = self.topo.proximo
-        return registro
+    def buscar_ultima_acao_desfazivel(self):
+        atual = self.topo
+        while atual is not None:
+            registro = atual.registro
+            if self._pode_desfazer(registro):
+                return registro
+            atual = atual.proximo
+        return None
+
+    def registrar_desfazer(self, registro_desfeito, descricao):
+        novo = NoPilha(
+            RegistroHistorico(
+                descricao,
+                "desfazer",
+                registro_desfeito.ocorrencia,
+                self.proximo_numero,
+                registro_desfeito.numero,
+            )
+        )
+        novo.proximo = self.topo
+        self.topo = novo
+        self.proximo_numero += 1
+
+    def _pode_desfazer(self, registro):
+        if registro.tipo != "cadastro" and registro.tipo != "atendimento":
+            return False
+        return not self._foi_desfeito(registro.numero)
+
+    def _foi_desfeito(self, numero_registro):
+        atual = self.topo
+        while atual is not None:
+            registro = atual.registro
+            if registro.tipo == "desfazer" and registro.numero_desfeito == numero_registro:
+                return True
+            atual = atual.proximo
+        return False
 
 
 class NoFila:

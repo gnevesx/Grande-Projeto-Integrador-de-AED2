@@ -94,7 +94,7 @@ class SistemaOcorrencias:
         return self.historico.listar()
 
     def desfazer_ultima_acao(self):
-        registro = self.historico.desfazer()
+        registro = self.historico.buscar_ultima_acao_desfazivel()
         if registro is None:
             return None
 
@@ -104,7 +104,9 @@ class SistemaOcorrencias:
         if tipo == "atendimento":
             ocorrencia.status = "Aberto"
             self._reconstruir_estruturas()
-            return f"Atendimento desfeito. Ocorrência ID {ocorrencia.id} voltou para Aberto."
+            mensagem = f"Atendimento desfeito. Ocorrência ID {ocorrencia.id} voltou para Aberto."
+            self.historico.registrar_desfazer(registro, mensagem)
+            return mensagem
 
         if tipo == "cadastro":
             self.lista_geral.remover_por_id(ocorrencia.id)
@@ -113,9 +115,11 @@ class SistemaOcorrencias:
             if ocorrencia.ordem_chegada == self._proxima_ordem - 1:
                 self._proxima_ordem -= 1
             self._reconstruir_estruturas()
-            return f"Cadastro desfeito. Ocorrência ID {ocorrencia.id} removida."
+            mensagem = f"Cadastro desfeito. Ocorrência ID {ocorrencia.id} removida."
+            self.historico.registrar_desfazer(registro, mensagem)
+            return mensagem
 
-        return f"Registro removido do histórico: {registro.descricao}"
+        return None
 
     def _maior_que(self, a, b, campo):
         if campo == "id":
