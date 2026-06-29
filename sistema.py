@@ -110,8 +110,6 @@ class SistemaOcorrencias:
 
         if tipo == "cadastro":
             self.lista_geral.remover_por_id(ocorrencia.id)
-            if ocorrencia.id == self._proximo_id - 1:
-                self._proximo_id -= 1
             if ocorrencia.ordem_chegada == self._proxima_ordem - 1:
                 self._proxima_ordem -= 1
             self._reconstruir_estruturas()
