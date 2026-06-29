@@ -1,6 +1,7 @@
 import os
 import sys
 
+from armazenamento import carregar_estado, salvar_estado
 from sistema import SistemaOcorrencias
 
 if hasattr(sys.stdout, "reconfigure"):
@@ -212,13 +213,14 @@ def exibir_menu():
 
 
 def executar_menu():
-    sistema = SistemaOcorrencias()
+    sistema = carregar_estado()
 
     while True:
         limpar_tela()
         exibir_menu()
         escolha = input("Escolha uma opção: ").strip()
         if escolha == "0":
+            salvar_estado(sistema)
             print("Encerrando o sistema.")
             break
 

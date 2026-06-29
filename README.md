@@ -50,7 +50,7 @@ A opção de desfazer remove a última ação da pilha. Se a última ação for 
 - Árvore binária de busca: localiza uma ocorrência pelo ID.
 - Heap máxima: atende primeiro a ocorrência aberta de maior prioridade.
 - Hash table: busca ocorrências por nome do solicitante ou tipo.
-- Ordenação manual: usa bubble sort para ordenar por ID, prioridade ou nome.
+- Ordenação manual: usa merge sort para ordenar por ID, prioridade ou nome.
 
 ## Consistencia dos dados
 

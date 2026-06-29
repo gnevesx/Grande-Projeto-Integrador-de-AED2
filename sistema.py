@@ -72,21 +72,15 @@ class SistemaOcorrencias:
     def ordenar_ocorrencias(self, campo):
         self._validar_campo_ordenacao(campo)
         copia = self.lista_geral.copiar()
-        if copia.esta_vazia():
+        if copia.esta_vazia() or copia.inicio.proximo is None:
             return copia
 
-        houve_troca = True
+        copia.inicio = self._ordenar_por_mesclagem(copia.inicio, campo)
 
-        while houve_troca:
-            houve_troca = False
-            atual = copia.inicio
-            while atual is not None and atual.proximo is not None:
-                if self._maior_que(atual.valor, atual.proximo.valor, campo):
-                    temporario = atual.valor
-                    atual.valor = atual.proximo.valor
-                    atual.proximo.valor = temporario
-                    houve_troca = True
-                atual = atual.proximo
+        atual = copia.inicio
+        while atual is not None and atual.proximo is not None:
+            atual = atual.proximo
+        copia.fim = atual
 
         return copia
 
@@ -118,6 +112,44 @@ class SistemaOcorrencias:
             return mensagem
 
         return None
+
+    def _ordenar_por_mesclagem(self, no_inicial, campo):
+        if no_inicial is None or no_inicial.proximo is None:
+            return no_inicial
+
+        meio = self._obter_meio(no_inicial)
+        proxima_metade = meio.proximo
+        meio.proximo = None
+
+        esquerda = self._ordenar_por_mesclagem(no_inicial, campo)
+        direita = self._ordenar_por_mesclagem(proxima_metade, campo)
+
+        return self._mesclar_ordenado(esquerda, direita, campo)
+
+    def _obter_meio(self, no_inicial):
+        if no_inicial is None:
+            return no_inicial
+
+        lento = no_inicial
+        rapido = no_inicial.proximo
+
+        while rapido is not None and rapido.proximo is not None:
+            lento = lento.proximo
+            rapido = rapido.proximo.proximo
+
+        return lento
+
+    def _mesclar_ordenado(self, a, b, campo):
+        if a is None:
+            return b
+        if b is None:
+            return a
+
+        if not self._maior_que(a.valor, b.valor, campo):
+            a.proximo = self._mesclar_ordenado(a.proximo, b, campo)
+            return a
+        b.proximo = self._mesclar_ordenado(a, b.proximo, campo)
+        return b
 
     def _maior_que(self, a, b, campo):
         if campo == "id":
