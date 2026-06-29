@@ -1,0 +1,58 @@
+DEMO - Sistema de Ocorrências Acadêmicas
+
+1) Listagem após cadastros
+ID: 1 | Nome: Ana Souza | Tipo: Documento | Prioridade: 2 | Ordem: 1 | Status: Aberto
+ID: 2 | Nome: Maria Lima | Tipo: Laboratório | Prioridade: 5 | Ordem: 2 | Status: Aberto
+ID: 3 | Nome: João Pedro | Tipo: Equipamento | Prioridade: 3 | Ordem: 3 | Status: Aberto
+
+2) Busca por ID usando árvore
+ID: 2
+Nome: Maria Lima
+Tipo: Laboratório
+Descrição: Computador não liga
+Prioridade: 5
+Ordem de chegada: 2
+Status: Aberto
+
+3) Busca por tipo usando hash table
+ID: 2 | Nome: Maria Lima | Tipo: Laboratório | Prioridade: 5 | Ordem: 2 | Status: Aberto
+
+4) Atendimento por fila
+ID: 1
+Nome: Ana Souza
+Tipo: Documento
+Descrição: Solicitação de histórico
+Prioridade: 2
+Ordem de chegada: 1
+Status: Atendido
+
+5) Atendimento por prioridade
+ID: 2
+Nome: Maria Lima
+Tipo: Laboratório
+Descrição: Computador não liga
+Prioridade: 5
+Ordem de chegada: 2
+Status: Atendido
+
+6) Ordenação manual por ID
+ID: 1 | Nome: Ana Souza | Tipo: Documento | Prioridade: 2 | Ordem: 1 | Status: Atendido
+ID: 2 | Nome: Maria Lima | Tipo: Laboratório | Prioridade: 5 | Ordem: 2 | Status: Atendido
+ID: 3 | Nome: João Pedro | Tipo: Equipamento | Prioridade: 3 | Ordem: 3 | Status: Aberto
+
+7) Histórico pela pilha
+Atendimento por prioridade da ocorrência ID 2
+Atendimento por fila da ocorrência ID 1
+Cadastro da ocorrência ID 3
+Cadastro da ocorrência ID 2
+Cadastro da ocorrência ID 1
+
+8) Desfazer atendimento por prioridade
+Atendimento desfeito. Ocorrência ID 2 voltou para Aberto.
+ID: 2
+Nome: Maria Lima
+Tipo: Laboratório
+Descrição: Computador não liga
+Prioridade: 5
+Ordem de chegada: 2
+Status: Aberto
