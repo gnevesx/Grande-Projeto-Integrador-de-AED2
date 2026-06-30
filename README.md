@@ -59,3 +59,22 @@ As ocorrências ficam em memória. Quando uma ocorrência é atendida, ela conti
 ## Evidencia
 
 O arquivo `screen_recording.mp4` contém uma gravação mostrando em execução o cadastro, listagem, busca por ID, busca por tipo, atendimento por fila, atendimento por prioridade, ordenação e histórico.
+
+## Perguntas
+
+### Onde foi usada a pilha?
+Na função de histórico, para armazenar as ações de cadastro e atendimento, permitindo desfazer a última ação.
+### Onde foi usada a árvore?
+Na função de busca por ID, para localizar rapidamente uma ocorrência específica.
+### Onde foi usada a heap? 
+Na função de atendimento por prioridade, para selecionar a ocorrência com maior prioridade.
+### Onde foi usada a hash table?
+Na função de busca por nome ou tipo, para facilitar a localização de ocorrências com base em critérios não numéricos.
+### Qual algoritmo de ordenação foi implementado?
+O algoritmo de ordenação implementado foi o merge sort.
+### Qual estrutura foi mais adequada para busca rápida?
+A árvore binária de busca foi mais adequada para busca rápida por ID.
+### Qual estrutura foi mais adequada para atendimento por prioridade?
+A heap máxima foi mais adequada para atendimento por prioridade.
+### Qual foi a maior dificuldade do grupo?
+A maior dificuldade foi a divisão das tarefas entre os integrantes e a conciliação do tempo entre as tarefas do trabalho e as demandas pessoais.
