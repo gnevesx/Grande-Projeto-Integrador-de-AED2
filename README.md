@@ -58,4 +58,4 @@ As ocorrências ficam em memória. Quando uma ocorrência é atendida, ela conti
 
 ## Evidencia
 
-O arquivo `evidencias/demo.txt` contém a saída de uma execução automática mostrando cadastro, listagem, busca por ID, busca por tipo, atendimento por fila, atendimento por prioridade, ordenação e histórico.
+O arquivo `screen_recording.mp4` contém uma gravação mostrando em execução o cadastro, listagem, busca por ID, busca por tipo, atendimento por fila, atendimento por prioridade, ordenação e histórico.
